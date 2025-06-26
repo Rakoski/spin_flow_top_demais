@@ -24,18 +24,15 @@ class _ListaSalasState extends State<ListaSalas> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Salas'),
-        actions: [_botaoRecarregar()],
-      ),
+      appBar: AppBar(title: const Text('Salas'), actions: [_botaoRecarregar()]),
       body: _carregando
           ? const Center(child: CircularProgressIndicator())
           : _salas.isEmpty
-              ? _widgetSemDados()
-              : ListView.builder(
-                  itemCount: _salas.length,
-                  itemBuilder: (context, index) => _itemListaSala(_salas[index]),
-                ),
+          ? _widgetSemDados()
+          : ListView.builder(
+              itemCount: _salas.length,
+              itemBuilder: (context, index) => _itemListaSala(_salas[index]),
+            ),
       floatingActionButton: _botaoAdicionar(),
     );
   }
@@ -121,7 +118,7 @@ class _ListaSalasState extends State<ListaSalas> {
   void _editarSala(DTOSala sala) {
     Navigator.pushNamed(
       context,
-      '/rota-quebrada-cadastro-sala',
+      Rotas.cadastroSala,
       arguments: sala,
     ).then((_) => _carregarSalas());
   }
@@ -133,7 +130,10 @@ class _ListaSalasState extends State<ListaSalas> {
         children: [
           const Icon(Icons.room_outlined, size: 64, color: Colors.grey),
           const SizedBox(height: 16),
-          const Text('Nenhuma sala cadastrada', style: TextStyle(fontSize: 18, color: Colors.grey)),
+          const Text(
+            'Nenhuma sala cadastrada',
+            style: TextStyle(fontSize: 18, color: Colors.grey),
+          ),
           const SizedBox(height: 16),
           _botaoAdicionar(),
         ],
@@ -176,8 +176,10 @@ class _ListaSalasState extends State<ListaSalas> {
 
   Widget _botaoAdicionar() {
     return FloatingActionButton(
-      onPressed: () => Navigator.pushNamed(context, '/rota-quebrada-cadastro-sala')
-          .then((_) => _carregarSalas()),
+      onPressed: () => Navigator.pushNamed(
+        context,
+        Rotas.cadastroSala,
+      ).then((_) => _carregarSalas()),
       tooltip: 'Adicionar Sala',
       child: const Icon(Icons.add),
     );
@@ -190,4 +192,4 @@ class _ListaSalasState extends State<ListaSalas> {
       tooltip: 'Recarregar',
     );
   }
-} 
+}
