@@ -24,13 +24,12 @@ import 'package:spin_flow/widget/listas/lista_turmas.dart';
 import 'package:spin_flow/widget/listas/lista_bikes.dart';
 import 'package:spin_flow/widget/listas/lista_mixes.dart';
 import 'package:spin_flow/widget/listas/lista_grupos_alunos.dart';
-import 'package:spin_flow/widget/listas/lista_salas.dart';
 import 'package:spin_flow/widget/form_video_aula.dart';
 import 'package:spin_flow/widget/listas/lista_video_aula.dart';
 
 class SpinFlowApp extends StatelessWidget {
   const SpinFlowApp({super.key});
- 
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -43,7 +42,8 @@ class SpinFlowApp extends StatelessWidget {
         Rotas.dashboardAluno: (context) => const TelaDashboardAluno(),
         Rotas.dashboardProfessora: (context) => const TelaDashboardProfessora(),
         Rotas.cadastroCategoriaMusica: (context) => const FormCategoriaMusica(),
-        Rotas.cadastroTipoManutencao: (context) => const FormTipoManutencaoTela(),
+        Rotas.cadastroTipoManutencao:
+            (context) => const FormTipoManutencaoTela(),
         Rotas.cadastroFabricante: (context) => const FormFabricante(),
         Rotas.cadastroBike: (context) => const FormBike(),
         Rotas.cadastroArtistaBanda: (context) => const FormArtistaBanda(),
@@ -54,7 +54,7 @@ class SpinFlowApp extends StatelessWidget {
         Rotas.cadastroAluno: (context) => const FormAluno(),
         Rotas.cadastroGrupoAlunos: (context) => const FormGrupoAlunos(),
         Rotas.cadastroVideoAula: (context) => const FormVideoAula(),
-        
+
         // Rotas das listas
         Rotas.listaFabricantes: (context) => const ListaFabricantes(),
         Rotas.listaCategoriasMusica: (context) => const ListaCategoriasMusica(),

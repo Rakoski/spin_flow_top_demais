@@ -1,6 +1,6 @@
 class ScriptSQLite {
   // ===== COMANDOS DE CRIAÇÃO DE TABELAS =====
-  
+
   // Tabelas principais (sem dependências)
   static const String _criarTabelaFabricante = '''
     CREATE TABLE fabricante (
@@ -71,6 +71,15 @@ class ScriptSQLite {
     )
   ''';
 
+  static const String _criarTabelaVideoAula = '''
+    CREATE TABLE video_aula (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      nome TEXT NOT NULL,
+      link_video TEXT NOT NULL,
+      ativo INTEGER NOT NULL DEFAULT 1
+    )
+  ''';
+
   // Variável pública com todos os comandos de criação
   static const List<String> comandosCriarTabelas = [
     _criarTabelaFabricante,
@@ -79,10 +88,11 @@ class ScriptSQLite {
     _criarTabelaArtistaBanda,
     _criarTabelaAluno,
     _criarTabelaSala,
+    _criarTabelaVideoAula,
   ];
 
   // ===== COMANDOS DE INSERÇÃO =====
-  
+
   // Inserções para Fabricante
   static const List<String> _insercoesFabricante = [
     "INSERT INTO fabricante (nome, ativo) VALUES ('Specialized', 1)",
@@ -139,6 +149,16 @@ class ScriptSQLite {
     "INSERT INTO sala (nome, numero_bikes, numero_filas, limite_bikes_por_fila, grade_bikes, ativa) VALUES ('Sala Iniciantes', 15, 3, 5, '[[0,0,1,0,0],[1,1,1,1,1],[1,1,1,1,1],[1,1,1,1,1]]', 1)",
   ];
 
+  static const List<String> _insercoesVideoAula = [
+    "INSERT INTO video_aula (nome, link_video, ativo) VALUES ('Introdução ao Flutter', 'https://youtube.com/watch?v=exemplo1', 1)",
+    "INSERT INTO video_aula (nome, link_video, ativo) VALUES ('Widgets Básicos', 'https://youtube.com/watch?v=exemplo2', 1)",
+    "INSERT INTO video_aula (nome, link_video, ativo) VALUES ('Gerenciamento de Estado', 'https://youtube.com/watch?v=exemplo3', 1)",
+    "INSERT INTO video_aula (nome, link_video, ativo) VALUES ('Navegação e Rotas', 'https://youtube.com/watch?v=exemplo4', 0)",
+    "INSERT INTO video_aula (nome, link_video, ativo) VALUES ('Animações em Flutter', 'https://youtube.com/watch?v=exemplo5', 1)",
+    "INSERT INTO video_aula (nome, link_video, ativo) VALUES ('Testes Unitários', 'https://youtube.com/watch?v=exemplo6', 1)",
+    "INSERT INTO video_aula (nome, link_video, ativo) VALUES ('Publicação na Store', 'https://youtube.com/watch?v=exemplo7', 0)",
+  ];
+
   // Variável pública com todas as inserções
   static const List<List<String>> comandosInsercoes = [
     _insercoesFabricante,
@@ -147,5 +167,6 @@ class ScriptSQLite {
     _insercoesArtistaBanda,
     _insercoesAluno,
     _insercoesSala,
+    _insercoesVideoAula,
   ];
-} 
+}

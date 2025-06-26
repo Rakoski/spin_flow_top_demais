@@ -19,4 +19,4 @@ final List<DTOVideoAula> mockVideoAulas = [
     linkVideo: 'https://youtu.be/recuperacao',
     ativo: false,
   ),
-]; 
+];
