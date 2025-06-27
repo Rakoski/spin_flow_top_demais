@@ -160,7 +160,7 @@ class _TelaDashboardProfessoraState extends State<TelaDashboardProfessora> with 
           Navigator.pushNamed(context, Rotas.listaAlunos);
         }),
         _CadastroTile('Salas', Icons.room, () {
-          Navigator.pushNamed(context, '/rota-quebrada-salas');
+          Navigator.pushNamed(context, Rotas.listaSalas);
         }),
         _CadastroTile('Vídeo-aula', Icons.ondemand_video, () {
           Navigator.pushNamed(context, '/lista-video-aula');
