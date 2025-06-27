@@ -80,6 +80,29 @@ class ScriptSQLite {
     )
   ''';
 
+  static const String _criarTabelaEstado = '''
+    CREATE TABLE estado (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      nome TEXT NOT NULL,
+      sigla TEXT NOT NULL UNIQUE,
+      regiao TEXT NOT NULL,
+      ativo INTEGER NOT NULL DEFAULT 1
+    )
+  ''';
+
+  static const String _criarTabelaCidade = '''
+    CREATE TABLE cidade (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      nome TEXT NOT NULL,
+      codigo_ibge TEXT,
+      populacao INTEGER,
+      area_km2 REAL,
+      id_estado INTEGER NOT NULL,
+      ativa INTEGER NOT NULL DEFAULT 1,
+      FOREIGN KEY (id_estado) REFERENCES estado (id)
+    )
+  ''';
+
   // Variável pública com todos os comandos de criação
   static const List<String> comandosCriarTabelas = [
     _criarTabelaFabricante,
@@ -89,6 +112,8 @@ class ScriptSQLite {
     _criarTabelaAluno,
     _criarTabelaSala,
     _criarTabelaVideoAula,
+    _criarTabelaEstado,
+    _criarTabelaCidade,
   ];
 
   // ===== COMANDOS DE INSERÇÃO =====
@@ -159,6 +184,47 @@ class ScriptSQLite {
     "INSERT INTO video_aula (nome, link_video, ativo) VALUES ('Publicação na Store', 'https://youtube.com/watch?v=exemplo7', 0)",
   ];
 
+  // Inserções para Estado
+  static const List<String> _insercoesEstado = [
+    "INSERT INTO estado (nome, sigla, regiao, ativo) VALUES ('São Paulo', 'SP', 'Sudeste', 1)",
+    "INSERT INTO estado (nome, sigla, regiao, ativo) VALUES ('Rio de Janeiro', 'RJ', 'Sudeste', 1)",
+    "INSERT INTO estado (nome, sigla, regiao, ativo) VALUES ('Minas Gerais', 'MG', 'Sudeste', 1)",
+    "INSERT INTO estado (nome, sigla, regiao, ativo) VALUES ('Bahia', 'BA', 'Nordeste', 1)",
+    "INSERT INTO estado (nome, sigla, regiao, ativo) VALUES ('Paraná', 'PR', 'Sul', 1)",
+    "INSERT INTO estado (nome, sigla, regiao, ativo) VALUES ('Rio Grande do Sul', 'RS', 'Sul', 1)",
+    "INSERT INTO estado (nome, sigla, regiao, ativo) VALUES ('Pernambuco', 'PE', 'Nordeste', 1)",
+    "INSERT INTO estado (nome, sigla, regiao, ativo) VALUES ('Ceará', 'CE', 'Nordeste', 1)",
+    "INSERT INTO estado (nome, sigla, regiao, ativo) VALUES ('Pará', 'PA', 'Norte', 1)",
+    "INSERT INTO estado (nome, sigla, regiao, ativo) VALUES ('Santa Catarina', 'SC', 'Sul', 1)",
+  ];
+
+  // Inserções para Cidade (com associação aos estados)
+  static const List<String> _insercoesCidade = [
+    // São Paulo (id: 1)
+    "INSERT INTO cidade (nome, codigo_ibge, populacao, area_km2, id_estado, ativa) VALUES ('São Paulo', '3550308', 12400232, 1521.11, 1, 1)",
+    "INSERT INTO cidade (nome, codigo_ibge, populacao, area_km2, id_estado, ativa) VALUES ('Guarulhos', '3518800', 1392121, 318.67, 1, 1)",
+    "INSERT INTO cidade (nome, codigo_ibge, populacao, area_km2, id_estado, ativa) VALUES ('Campinas', '3509502', 1213792, 794.43, 1, 1)",
+
+    // Rio de Janeiro (id: 2)
+    "INSERT INTO cidade (nome, codigo_ibge, populacao, area_km2, id_estado, ativa) VALUES ('Rio de Janeiro', '3304557', 6775561, 1200.33, 2, 1)",
+    "INSERT INTO cidade (nome, codigo_ibge, populacao, area_km2, id_estado, ativa) VALUES ('São Gonçalo', '3304904', 1091737, 249.14, 2, 1)",
+    "INSERT INTO cidade (nome, codigo_ibge, populacao, area_km2, id_estado, ativa) VALUES ('Duque de Caxias', '3301702', 924624, 467.62, 2, 1)",
+
+    // Minas Gerais (id: 3)
+    "INSERT INTO cidade (nome, codigo_ibge, populacao, area_km2, id_estado, ativa) VALUES ('Belo Horizonte', '3106200', 2530701, 331.40, 3, 1)",
+    "INSERT INTO cidade (nome, codigo_ibge, populacao, area_km2, id_estado, ativa) VALUES ('Uberlândia', '3170206', 699097, 4115.09, 3, 1)",
+    "INSERT INTO cidade (nome, codigo_ibge, populacao, area_km2, id_estado, ativa) VALUES ('Contagem', '3118601', 668949, 195.27, 3, 1)",
+
+    // Bahia (id: 4)
+    "INSERT INTO cidade (nome, codigo_ibge, populacao, area_km2, id_estado, ativa) VALUES ('Salvador', '2927408', 2886698, 692.82, 4, 1)",
+    "INSERT INTO cidade (nome, codigo_ibge, populacao, area_km2, id_estado, ativa) VALUES ('Feira de Santana', '2910800', 619609, 1304.40, 4, 1)",
+
+    // Paraná (id: 5)
+    "INSERT INTO cidade (nome, codigo_ibge, populacao, area_km2, id_estado, ativa) VALUES ('Curitiba', '4106902', 1963726, 434.89, 5, 1)",
+    "INSERT INTO cidade (nome, codigo_ibge, populacao, area_km2, id_estado, ativa) VALUES ('Londrina', '4113700', 575377, 1651.82, 5, 1)",
+    "INSERT INTO cidade (nome, codigo_ibge, populacao, area_km2, id_estado, ativa) VALUES ('Maringá', '4115200', 430157, 487.05, 5, 1)",
+  ];
+
   // Variável pública com todas as inserções
   static const List<List<String>> comandosInsercoes = [
     _insercoesFabricante,
@@ -168,5 +234,7 @@ class ScriptSQLite {
     _insercoesAluno,
     _insercoesSala,
     _insercoesVideoAula,
+    _insercoesEstado,
+    _insercoesCidade,
   ];
 }
