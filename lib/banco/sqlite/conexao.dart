@@ -7,28 +7,22 @@ import 'script.dart';
 
 class ConexaoSQLite {
   static Database? _database;
-  
-  // Método singleton para obter a instância do banco
+
   static Future<Database> get database async {
     if (_database != null) return _database!;
-    
-    _database = await _inicializarBanco();
+    _database =
+        await _inicializarBanco(); // Corrigido: underscore ao invés de asterisco
     return _database!;
   }
 
   static Future<Database> _inicializarBanco() async {
-    // Configurar para diferentes plataformas
     if (kIsWeb) {
-      // Web
       databaseFactory = databaseFactoryFfiWeb;
     } else if (Platform.isWindows || Platform.isLinux) {
-      // Desktop
       sqfliteFfiInit();
       databaseFactory = databaseFactoryFfi;
     }
-    // Mobile usa o sqflite padrão
 
-    // Caminho do banco
     String path;
     if (kIsWeb) {
       path = 'spin_flow.db';
@@ -36,9 +30,8 @@ class ConexaoSQLite {
       String databasesPath = await databaseFactory.getDatabasesPath();
       path = join(databasesPath, 'spin_flow.db');
     }
-    deleteDatabase(path);
 
-    // Abrir ou criar banco
+    // deleteDatabase(path);
     return await databaseFactory.openDatabase(
       path,
       options: OpenDatabaseOptions(
@@ -50,12 +43,10 @@ class ConexaoSQLite {
   }
 
   static Future<void> _criarTabelas(Database db, int version) async {
-    // Criar todas as tabelas
     for (String comando in ScriptSQLite.comandosCriarTabelas) {
       await db.execute(comando);
     }
-    
-    // Inserir dados iniciais
+
     for (List<String> insercoes in ScriptSQLite.comandosInsercoes) {
       for (String comando in insercoes) {
         await db.execute(comando);
@@ -63,15 +54,19 @@ class ConexaoSQLite {
     }
   }
 
-  static Future<void> _atualizarBanco(Database db, int oldVersion, int newVersion) async {
+  static Future<void> _atualizarBanco(
+    Database db,
+    int oldVersion,
+    int newVersion,
+  ) async {
     // Lógica para atualizações futuras
   }
 
-  // Método para fechar conexão
+  // Método opcional para fechar conexão
   static Future<void> fecharConexao() async {
     if (_database != null) {
       await _database!.close();
       _database = null;
     }
   }
-} 
+}

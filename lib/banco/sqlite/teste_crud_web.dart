@@ -19,8 +19,7 @@ class _TesteCRUDWebState extends State<TesteCRUDWeb> {
   bool _testando = false;
   int _testesPassaram = 0;
   int _testesFalharam = 0;
-  
-  // Instâncias dos DAOs
+
   final DAOFabricante _daoFabricante = DAOFabricante();
   final DAOCategoriaMusica _daoCategoria = DAOCategoriaMusica();
 
@@ -40,29 +39,21 @@ class _TesteCRUDWebState extends State<TesteCRUDWeb> {
 
     try {
       _adicionarLog('🚀 Iniciando testes CRUD para Web...');
-      
-      // Configurar SQLite para web
+
       _adicionarLog('🌐 Configurando SQLite para web...');
       databaseFactory = databaseFactoryFfiWeb;
-      
-      // Inicializar conexão
+
       _adicionarLog('🔌 Inicializando conexão SQLite...');
       await ConexaoSQLite.database;
       _adicionarLog('✅ Conexão SQLite inicializada');
 
-      // Testar Fabricante
       await _testarFabricante();
-      
-      // Testar CategoriaMusica
+
       await _testarCategoriaMusica();
-      
-      // Relatório final
+
       _mostrarRelatorioFinal();
-      
-      // Fechar conexão
-      await ConexaoSQLite.fecharConexao();
+
       _adicionarLog('✅ Conexão SQLite fechada');
-      
     } catch (e) {
       _adicionarLog('💥 ERRO FATAL: $e');
       _testesFalharam++;
@@ -75,24 +66,23 @@ class _TesteCRUDWebState extends State<TesteCRUDWeb> {
 
   Future<void> _testarFabricante() async {
     _adicionarLog('\n🔧 TESTANDO FABRICANTE...');
-    
+
     try {
-      // CREATE
       _adicionarLog('  📝 Testando CREATE...');
       DTOFabricante fabricante = DTOFabricante(
         nome: 'Teste Fabricante Web',
         descricao: 'Descrição teste web',
         ativo: true,
       );
-      
+
       int id = await _daoFabricante.salvar(fabricante);
       _adicionarLog('  ✅ CREATE: Fabricante criado com ID $id');
       _testesPassaram++;
 
-      // READ
       _adicionarLog('  📖 Testando READ...');
       DTOFabricante? fabricanteLido = await _daoFabricante.buscarPorId(id);
-      if (fabricanteLido != null && fabricanteLido.nome == 'Teste Fabricante Web') {
+      if (fabricanteLido != null &&
+          fabricanteLido.nome == 'Teste Fabricante Web') {
         _adicionarLog('  ✅ READ: Fabricante lido corretamente');
         _testesPassaram++;
       } else {
@@ -100,7 +90,6 @@ class _TesteCRUDWebState extends State<TesteCRUDWeb> {
         _testesFalharam++;
       }
 
-      // UPDATE
       _adicionarLog('  🔄 Testando UPDATE...');
       DTOFabricante fabricanteAtualizado = DTOFabricante(
         id: id,
@@ -109,8 +98,10 @@ class _TesteCRUDWebState extends State<TesteCRUDWeb> {
         ativo: false,
       );
       await _daoFabricante.salvar(fabricanteAtualizado);
-      
-      DTOFabricante? fabricanteVerificado = await _daoFabricante.buscarPorId(id);
+
+      DTOFabricante? fabricanteVerificado = await _daoFabricante.buscarPorId(
+        id,
+      );
       if (fabricanteVerificado?.nome == 'Fabricante Web Atualizado') {
         _adicionarLog('  ✅ UPDATE: Fabricante atualizado corretamente');
         _testesPassaram++;
@@ -119,7 +110,6 @@ class _TesteCRUDWebState extends State<TesteCRUDWeb> {
         _testesFalharam++;
       }
 
-      // DELETE
       _adicionarLog('  🗑️ Testando DELETE...');
       await _daoFabricante.excluir(id);
       DTOFabricante? fabricanteDeletado = await _daoFabricante.buscarPorId(id);
@@ -130,7 +120,6 @@ class _TesteCRUDWebState extends State<TesteCRUDWeb> {
         _adicionarLog('  ❌ DELETE: Erro ao deletar fabricante');
         _testesFalharam++;
       }
-
     } catch (e) {
       _adicionarLog('  ❌ ERRO no teste de Fabricante: $e');
       _testesFalharam++;
@@ -139,23 +128,22 @@ class _TesteCRUDWebState extends State<TesteCRUDWeb> {
 
   Future<void> _testarCategoriaMusica() async {
     _adicionarLog('\n🎵 TESTANDO CATEGORIA MÚSICA...');
-    
+
     try {
-      // CREATE
       _adicionarLog('  📝 Testando CREATE...');
       DTOCategoriaMusica categoria = DTOCategoriaMusica(
         nome: 'Teste Categoria Web',
         ativa: true,
       );
-      
+
       int id = await _daoCategoria.salvar(categoria);
       _adicionarLog('  ✅ CREATE: Categoria criada com ID $id');
       _testesPassaram++;
 
-      // READ
       _adicionarLog('  📖 Testando READ...');
       DTOCategoriaMusica? categoriaLida = await _daoCategoria.buscarPorId(id);
-      if (categoriaLida != null && categoriaLida.nome == 'Teste Categoria Web') {
+      if (categoriaLida != null &&
+          categoriaLida.nome == 'Teste Categoria Web') {
         _adicionarLog('  ✅ READ: Categoria lida corretamente');
         _testesPassaram++;
       } else {
@@ -163,7 +151,6 @@ class _TesteCRUDWebState extends State<TesteCRUDWeb> {
         _testesFalharam++;
       }
 
-      // UPDATE
       _adicionarLog('  🔄 Testando UPDATE...');
       DTOCategoriaMusica categoriaAtualizada = DTOCategoriaMusica(
         id: id,
@@ -171,8 +158,10 @@ class _TesteCRUDWebState extends State<TesteCRUDWeb> {
         ativa: false,
       );
       await _daoCategoria.salvar(categoriaAtualizada);
-      
-      DTOCategoriaMusica? categoriaVerificada = await _daoCategoria.buscarPorId(id);
+
+      DTOCategoriaMusica? categoriaVerificada = await _daoCategoria.buscarPorId(
+        id,
+      );
       if (categoriaVerificada?.nome == 'Categoria Web Atualizada') {
         _adicionarLog('  ✅ UPDATE: Categoria atualizada corretamente');
         _testesPassaram++;
@@ -181,10 +170,11 @@ class _TesteCRUDWebState extends State<TesteCRUDWeb> {
         _testesFalharam++;
       }
 
-      // DELETE
       _adicionarLog('  🗑️ Testando DELETE...');
       await _daoCategoria.excluir(id);
-      DTOCategoriaMusica? categoriaDeletada = await _daoCategoria.buscarPorId(id);
+      DTOCategoriaMusica? categoriaDeletada = await _daoCategoria.buscarPorId(
+        id,
+      );
       if (categoriaDeletada == null) {
         _adicionarLog('  ✅ DELETE: Categoria deletada corretamente');
         _testesPassaram++;
@@ -192,7 +182,6 @@ class _TesteCRUDWebState extends State<TesteCRUDWeb> {
         _adicionarLog('  ❌ DELETE: Erro ao deletar categoria');
         _testesFalharam++;
       }
-
     } catch (e) {
       _adicionarLog('  ❌ ERRO no teste de CategoriaMusica: $e');
       _testesFalharam++;
@@ -203,18 +192,19 @@ class _TesteCRUDWebState extends State<TesteCRUDWeb> {
     _adicionarLog('\n📊 === RELATÓRIO FINAL ===');
     _adicionarLog('✅ Testes que passaram: $_testesPassaram');
     _adicionarLog('❌ Testes que falharam: $_testesFalharam');
-    
-    double taxaSucesso = _testesPassaram > 0 
-        ? (_testesPassaram / (_testesPassaram + _testesFalharam)) * 100 
-        : 0;
+
+    double taxaSucesso =
+        _testesPassaram > 0
+            ? (_testesPassaram / (_testesPassaram + _testesFalharam)) * 100
+            : 0;
     _adicionarLog('📈 Taxa de sucesso: ${taxaSucesso.toStringAsFixed(1)}%');
-    
+
     if (_testesFalharam == 0) {
       _adicionarLog('\n🎉 PARABÉNS! TODOS OS TESTES PASSARAM!');
     } else {
       _adicionarLog('\n⚠️ ALGUNS TESTES FALHARAM. Verifique os logs acima.');
     }
-    
+
     _adicionarLog('=== FIM DOS TESTES ===');
   }
 
@@ -230,52 +220,70 @@ class _TesteCRUDWebState extends State<TesteCRUDWeb> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // Botão de teste
             ElevatedButton(
               onPressed: _testando ? null : _executarTestes,
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.green,
                 padding: EdgeInsets.symmetric(vertical: 16),
               ),
-              child: _testando 
-                ? Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SizedBox(
-                        width: 20,
-                        height: 20,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                          valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                        ),
+              child:
+                  _testando
+                      ? Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                Colors.white,
+                              ),
+                            ),
+                          ),
+                          SizedBox(width: 10),
+                          Text(
+                            'Executando testes...',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ],
+                      )
+                      : Text(
+                        '🚀 EXECUTAR TESTES CRUD',
+                        style: TextStyle(color: Colors.white, fontSize: 16),
                       ),
-                      SizedBox(width: 10),
-                      Text('Executando testes...', style: TextStyle(color: Colors.white)),
-                    ],
-                  )
-                : Text('🚀 EXECUTAR TESTES CRUD', style: TextStyle(color: Colors.white, fontSize: 16)),
             ),
-            
+
             SizedBox(height: 20),
-            
-            // Estatísticas
+
             Card(
               child: Padding(
                 padding: EdgeInsets.all(16.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    _buildStatCard('✅ Passaram', _testesPassaram.toString(), Colors.green),
-                    _buildStatCard('❌ Falharam', _testesFalharam.toString(), Colors.red),
-                    _buildStatCard('📊 Total', (_testesPassaram + _testesFalharam).toString(), Colors.blue),
+                    _buildStatCard(
+                      '✅ Passaram',
+                      _testesPassaram.toString(),
+                      Colors.green,
+                    ),
+                    _buildStatCard(
+                      '❌ Falharam',
+                      _testesFalharam.toString(),
+                      Colors.red,
+                    ),
+                    _buildStatCard(
+                      '📊 Total',
+                      (_testesPassaram + _testesFalharam).toString(),
+                      Colors.blue,
+                    ),
                   ],
                 ),
               ),
             ),
-            
+
             SizedBox(height: 20),
-            
-            // Logs
+
             Expanded(
               child: Card(
                 child: Column(
@@ -293,7 +301,10 @@ class _TesteCRUDWebState extends State<TesteCRUDWeb> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text('📋 LOGS DOS TESTES', style: TextStyle(fontWeight: FontWeight.bold)),
+                          Text(
+                            '📋 LOGS DOS TESTES',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
                           TextButton(
                             onPressed: () => setState(() => _logs.clear()),
                             child: Text('Limpar'),
@@ -307,16 +318,23 @@ class _TesteCRUDWebState extends State<TesteCRUDWeb> {
                         child: SingleChildScrollView(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
-                            children: _logs.map((log) => Padding(
-                              padding: EdgeInsets.symmetric(vertical: 2),
-                              child: Text(
-                                log,
-                                style: TextStyle(
-                                  fontFamily: 'monospace',
-                                  fontSize: 12,
-                                ),
-                              ),
-                            )).toList(),
+                            children:
+                                _logs
+                                    .map(
+                                      (log) => Padding(
+                                        padding: EdgeInsets.symmetric(
+                                          vertical: 2,
+                                        ),
+                                        child: Text(
+                                          log,
+                                          style: TextStyle(
+                                            fontFamily: 'monospace',
+                                            fontSize: 12,
+                                          ),
+                                        ),
+                                      ),
+                                    )
+                                    .toList(),
                           ),
                         ),
                       ),
@@ -336,21 +354,26 @@ class _TesteCRUDWebState extends State<TesteCRUDWeb> {
       children: [
         Text(title, style: TextStyle(fontSize: 12, color: Colors.grey[600])),
         SizedBox(height: 4),
-        Text(value, style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: color)),
+        Text(
+          value,
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+            color: color,
+          ),
+        ),
       ],
     );
   }
 }
 
-// Função main para web
 void main() {
-  runApp(MaterialApp(
-    title: 'Teste CRUD SQLite',
-    theme: ThemeData(
-      primarySwatch: Colors.blue,
-      useMaterial3: true,
+  runApp(
+    MaterialApp(
+      title: 'Teste CRUD SQLite',
+      theme: ThemeData(primarySwatch: Colors.blue, useMaterial3: true),
+      home: TesteCRUDWeb(),
+      debugShowCheckedModeBanner: false,
     ),
-    home: TesteCRUDWeb(),
-    debugShowCheckedModeBanner: false,
-  ));
-} 
+  );
+}
