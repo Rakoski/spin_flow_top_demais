@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:spin_flow/banco/sqlite/dao/dao_fabricante.dart';
 import 'package:spin_flow/dto/dto_bike.dart';
 import 'package:spin_flow/dto/dto_fabricante.dart';
 import 'package:spin_flow/configuracoes/rotas.dart';
 import 'package:spin_flow/widget/componentes/campos/comum/campo_data.dart';
 import 'package:spin_flow/widget/componentes/campos/selecao_unica/campo_opcoes.dart';
 import 'package:spin_flow/widget/componentes/campos/comum/campo_texto.dart';
-import 'package:spin_flow/banco/mock/mock_fabricantes.dart';
 
 class FormBike extends StatefulWidget {
   const FormBike({super.key});
@@ -23,11 +23,22 @@ class _FormBikeState extends State<FormBike> {
   DTOFabricante? _fabricanteSelecionado;
   DateTime? _dataCadastro;
   bool _ativa = true;
-
-  final List<DTOFabricante> _fabricantes = mockFabricantes;
+  List<DTOFabricante> _fabricantes = [];
+  bool _carregandoFabricantes = true;
 
   final TextEditingController _nomeControlador = TextEditingController();
   final TextEditingController _numeroSerieControlador = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _carregarFabricantes();
+  }
+
+  Future<void> _carregarFabricantes() async {
+    _fabricantes = await DAOFabricante().buscarTodos();
+    setState(() => _carregandoFabricantes = false);
+  }
 
   void _limparFormulario() {
     setState(() {
@@ -133,13 +144,17 @@ class _FormBikeState extends State<FormBike> {
                 aoAlterar: (value) => _numeroSerie = value,
               ),
               const SizedBox(height: 16),
-              CampoOpcoes<DTOFabricante>(
-                opcoes: _fabricantes,
-                rotulo: 'Fabricante',
-                textoPadrao: 'Selecione um fabricante',
-                rotaCadastro: Rotas.cadastroFabricante,
-                aoAlterar: (fabricante) => setState(() => _fabricanteSelecionado = fabricante),
-              ),
+              _carregandoFabricantes
+                  ? const Center(child: CircularProgressIndicator())
+                  : CampoOpcoes<DTOFabricante>(
+                      opcoes: _fabricantes,
+                      rotulo: 'Fabricante',
+                      textoPadrao: 'Selecione um fabricante',
+                      rotaCadastro: Rotas.cadastroFabricante,
+                      aoAlterar: (fabricante) => setState(() => _fabricanteSelecionado = fabricante),
+                      // Ao voltar do cadastro, recarrega fabricantes
+                      // O CampoOpcoes já chama aoAlterar, mas precisamos recarregar a lista ao cadastrar novo
+                    ),
               const SizedBox(height: 16),
               CampoData(
                 rotulo: 'Data de Cadastro',

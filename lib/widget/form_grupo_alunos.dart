@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:spin_flow/banco/sqlite/dao/dao_aluno.dart';
 import 'package:spin_flow/dto/dto_grupo_alunos.dart';
 import 'package:spin_flow/dto/dto_aluno.dart';
 import 'package:spin_flow/configuracoes/rotas.dart';
 import 'package:spin_flow/widget/componentes/campos/selecao_multipla/campo_busca_multipla.dart';
 import 'package:spin_flow/widget/componentes/campos/comum/campo_texto.dart';
-import 'package:spin_flow/banco/mock/mock_alunos.dart';
 
 class FormGrupoAlunos extends StatefulWidget {
   const FormGrupoAlunos({super.key});
@@ -138,13 +138,25 @@ class _FormGrupoAlunosState extends State<FormGrupoAlunos> {
               const SizedBox(height: 16),
               Text('Alunos'),
               const SizedBox(height: 8),
-              CampoBuscaMultipla<DTOAluno>(
-                opcoes: mockAlunos,
-                valoresSelecionados: _alunosSelecionados,
-                rotulo: 'Alunos do Grupo',
-                textoPadrao: 'Digite para buscar alunos...',
-                rotaCadastro: Rotas.cadastroAluno,
-                onChanged: (lista) => setState(() => _alunosSelecionados = lista),
+              FutureBuilder<List<DTOAluno>>(
+                future: DAOAluno().buscarTodos(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasError) {
+                    return Text('Erro ao carregar alunos: ${snapshot.error}');
+                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                    return const Text('Nenhum aluno encontrado.');
+                  }
+                  return CampoBuscaMultipla<DTOAluno>(
+                    opcoes: snapshot.data!,
+                    valoresSelecionados: _alunosSelecionados,
+                    rotulo: 'Alunos do Grupo',
+                    textoPadrao: 'Digite para buscar alunos...',
+                    rotaCadastro: Rotas.cadastroAluno,
+                    onChanged: (lista) => setState(() => _alunosSelecionados = lista),
+                  );
+                },
               ),
               const Spacer(),
               SizedBox(

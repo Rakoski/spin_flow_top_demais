@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:spin_flow/banco/sqlite/dao/dao_musica.dart';
 import 'package:spin_flow/dto/dto_musica.dart';
 import 'package:spin_flow/dto/dto_mix.dart';
 import 'package:spin_flow/widget/componentes/campos/comum/campo_texto.dart';
 import 'package:spin_flow/widget/componentes/campos/comum/campo_data.dart';
 import 'package:spin_flow/widget/componentes/campos/selecao_unica/campo_busca_opcoes.dart';
 import 'package:spin_flow/configuracoes/rotas.dart';
-import 'package:spin_flow/banco/mock/mock_musicas.dart';
 
 class FormMix extends StatefulWidget {
   const FormMix({super.key});
@@ -136,13 +136,25 @@ class _FormMixState extends State<FormMix> {
               aoAlterar: (data) => setState(() => _dataFim = data),
             ),
             const SizedBox(height: 16),
-            CampoBuscaOpcoes<DTOMusica>(
-              opcoes: mockMusicas,
-              rotulo: 'Música',
-              eObrigatorio: false,
-              textoPadrao: 'Selecione as músicas do mix',
-              rotaCadastro: Rotas.cadastroMusica,
-              aoAlterar: _adicionarMusica,
+            FutureBuilder<List<DTOMusica>>(
+              future: DAOMusicas().buscarTodos(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasError) {
+                  return Text('Erro ao carregar músicas: ${snapshot.error}');
+                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                  return const Text('Nenhuma música encontrada.');
+                }
+                return CampoBuscaOpcoes<DTOMusica>(
+                  opcoes: snapshot.data!,
+                  rotulo: 'Música',
+                  eObrigatorio: false,
+                  textoPadrao: 'Selecione as músicas do mix',
+                  rotaCadastro: Rotas.cadastroMusica,
+                  aoAlterar: _adicionarMusica,
+                );
+              },
             ),
             const SizedBox(height: 8),
             TextButton.icon(
