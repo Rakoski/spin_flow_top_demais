@@ -11,6 +11,7 @@ import 'package:spin_flow/widget/form_musica.dart';
 import 'package:spin_flow/widget/form_sala.dart';
 import 'package:spin_flow/widget/form_tipo_manutencao.dart';
 import 'package:spin_flow/widget/form_turma.dart';
+import 'package:spin_flow/widget/listas/lista_salas.dart';
 import 'package:spin_flow/widget/tela_dashboard_aluno.dart';
 import 'package:spin_flow/widget/tela_dashboard_professora.dart';
 import 'package:spin_flow/widget/tela_login.dart';
@@ -67,7 +68,7 @@ class SpinFlowApp extends StatelessWidget {
         Rotas.listaMixes: (context) => const ListaMixes(),
         Rotas.listaGruposAlunos: (context) => const ListaGruposAlunos(),
         '/lista-video-aula': (context) => const ListaVideoAula(),
-        Rotas.listaSalas: (context) => const ListaSalas()
+        Rotas.listaSalas: (context) => const ListaSalas(),
       },
     );
   }
