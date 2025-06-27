@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:spin_flow/banco/sqlite/dao/dao_artista_banda.dart';
+import 'package:spin_flow/banco/sqlite/dao/dao_categoria_musica.dart';
+import 'package:spin_flow/banco/sqlite/dao/dao_musica.dart';
 import 'package:spin_flow/dto/dto_artista_banda.dart';
 import 'package:spin_flow/dto/dto_categoria_musica.dart';
 import 'package:spin_flow/dto/dto_musica.dart';
 import 'package:spin_flow/configuracoes/rotas.dart';
 import 'package:spin_flow/widget/componentes/campos/selecao_multipla/campo_multi_selecao.dart';
 import 'package:spin_flow/widget/componentes/campos/comum/campo_texto.dart';
+import 'package:spin_flow/widget/componentes/campos/selecao_unica/campo_busca_opcoes.dart';
 import 'package:spin_flow/widget/componentes/campos/selecao_unica/campo_opcoes.dart';
 import 'package:spin_flow/widget/componentes/campos/comum/campo_url.dart';
-import 'package:spin_flow/banco/mock/mock_artistas_bandas.dart';
-import 'package:spin_flow/banco/mock/mock_categorias_musica.dart';
 
 class FormMusica extends StatefulWidget {
   const FormMusica({super.key});
@@ -26,9 +28,23 @@ class _FormMusicaState extends State<FormMusica> {
   final List<DTOCategoriaMusica> _categoriasSelecionadas = [];
   final List<Map<String, String?>> _links = [];
   String? _descricao;
+  List<DTOMusica> _musicas = [];
+  bool _carregandoMusicas = true;
 
-  final List<DTOArtistaBanda> _artistasMock = mockArtistasBandas;
-  final List<DTOCategoriaMusica> _categoriasMock = mockCategoriasMusica;
+
+  @override
+  void initState() {
+    super.initState();
+    _carregarMusicas();
+  }
+
+  void _carregarMusicas() async {
+    setState(() {
+      _carregandoMusicas = true;
+    });
+    _musicas = await DAOMusicas().buscarTodos();
+    setState(() => _carregandoMusicas = false);
+  }
 
   void _adicionarLink() {
     setState(() {
@@ -178,33 +194,56 @@ class _FormMusicaState extends State<FormMusica> {
                 aoAlterar: (value) => _nome = value,
               ),
               const SizedBox(height: 16),
-              CampoOpcoes<DTOArtistaBanda>(
-                opcoes: _artistasMock,
-                valorSelecionado: _artistaSelecionado,
-                rotulo: 'Artista/Banda',
-                textoPadrao: 'Selecione o artista/banda',
-                eObrigatorio: true,
-                rotaCadastro: Rotas.cadastroArtistaBanda,
-                aoAlterar: (artista) {
-                  setState(() {
-                    _artistaSelecionado = artista;
-                  });
+              FutureBuilder<List<DTOArtistaBanda>>(
+                future: DAOArtistaBanda().buscarTodos(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasError) {
+                    return Text('Erro ao carregar artistas/bandas: ${snapshot.error}');
+                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                    return const Text('Nenhum artista/banda encontrado.');
+                  }
+                  return CampoBuscaOpcoes<DTOArtistaBanda>(
+                    opcoes: snapshot.data!,
+                    rotulo: 'Artista/Banda',
+                    eObrigatorio: true,
+                    textoPadrao: 'Selecione o artista/banda',
+                    rotaCadastro: Rotas.cadastroArtistaBanda,
+                    aoAlterar: (artista) {
+                      setState(() {
+                        _artistaSelecionado = artista;
+                      });
+                    },
+                  );
                 },
               ),
               const SizedBox(height: 16),
-              CampoMultiSelecao<DTOCategoriaMusica>(
-                opcoes: _categoriasMock,
-                valoresSelecionados: _categoriasSelecionadas,
-                rotaCadastro: Rotas.cadastroCategoriaMusica,
-                rotulo: 'Categorias de Música',
-                textoPadrao: 'Selecione categorias',
-                eObrigatorio: true,
-                onChanged: (selecionados) {
-                  setState(() {
-                    _categoriasSelecionadas
-                      ..clear()
-                      ..addAll(selecionados);
-                  });
+              FutureBuilder<List<DTOCategoriaMusica>>(
+                future: DAOCategoriaMusica().buscarTodos(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasError) {
+                    return Text('Erro ao carregar categorias: ${snapshot.error}');
+                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                    return const Text('Nenhuma categoria encontrada.');
+                  }
+                  return CampoMultiSelecao<DTOCategoriaMusica>(
+                    opcoes: snapshot.data!,
+                    valoresSelecionados: _categoriasSelecionadas,
+                    rotaCadastro: Rotas.cadastroCategoriaMusica,
+                    rotulo: 'Categorias de Música',
+                    textoPadrao: 'Selecione categorias',
+                    eObrigatorio: true,
+                    onChanged: (selecionados) {
+                      setState(() {
+                        _categoriasSelecionadas
+                          ..clear()
+                          ..addAll(selecionados);
+                      });
+                    },
+                  );
                 },
               ),
               const SizedBox(height: 24),

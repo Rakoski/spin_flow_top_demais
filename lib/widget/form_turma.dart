@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:spin_flow/banco/sqlite/dao/dao_sala.dart';
 import 'package:spin_flow/dto/dto_turma.dart';
 import 'package:spin_flow/dto/dto_sala.dart';
 import 'package:spin_flow/configuracoes/rotas.dart';
@@ -6,7 +7,6 @@ import 'package:spin_flow/widget/componentes/campos/comum/campo_hora.dart';
 import 'package:spin_flow/widget/componentes/campos/comum/campo_numero.dart';
 import 'package:spin_flow/widget/componentes/campos/selecao_unica/campo_opcoes.dart';
 import 'package:spin_flow/widget/componentes/campos/comum/campo_texto.dart';
-import 'package:spin_flow/banco/mock/mock_salas.dart';
 
 import 'componentes/campos/selecao_multipla/campo_dias_semana.dart';
 
@@ -118,15 +118,27 @@ class _FormTurmaState extends State<FormTurma> {
                 aoAlterar: (value) => _duracao = value,
               ),
               const SizedBox(height: 16),
-              CampoOpcoes<DTOSala>(
-                opcoes: mockSalas,
-                valorSelecionado: _salaSelecionada,
-                rotulo: 'Sala / Local da aula',
-                rotaCadastro: Rotas.cadastroSala,
-                aoAlterar: (DTOSala? novaSala) {
-                  setState(() {
-                    _salaSelecionada = novaSala;
-                  });
+              FutureBuilder<List<DTOSala>>(
+                future: DAOSala().buscarTodos(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const CircularProgressIndicator();
+                  } else if (snapshot.hasError) {
+                    return const Text('Erro ao carregar salas');
+                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                    return const Text('Nenhuma sala encontrada');
+                  }
+                  return CampoOpcoes<DTOSala>(
+                    opcoes: snapshot.data!,
+                    valorSelecionado: _salaSelecionada,
+                    rotulo: 'Sala / Local da aula',
+                    rotaCadastro: Rotas.cadastroSala,
+                    aoAlterar: (DTOSala? novaSala) {
+                      setState(() {
+                        _salaSelecionada = novaSala;
+                      });
+                    },
+                  );
                 },
               ),
               const SizedBox(height: 16),
