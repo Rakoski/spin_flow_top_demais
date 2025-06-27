@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:spin_flow/configuracoes/rotas.dart';
 import 'package:spin_flow/widget/form_aluno.dart';
+import 'package:spin_flow/widget/form_cidade.dart';
+import 'package:spin_flow/widget/form_estado.dart';
 import 'package:spin_flow/widget/form_grupo_alunos.dart';
 import 'package:spin_flow/widget/form_mix.dart';
 import 'package:spin_flow/widget/form_artista_banda.dart';
@@ -11,6 +13,8 @@ import 'package:spin_flow/widget/form_musica.dart';
 import 'package:spin_flow/widget/form_sala.dart';
 import 'package:spin_flow/widget/form_tipo_manutencao.dart';
 import 'package:spin_flow/widget/form_turma.dart';
+import 'package:spin_flow/widget/listas/lista_cidade.dart';
+import 'package:spin_flow/widget/listas/lista_estado.dart';
 import 'package:spin_flow/widget/listas/lista_salas.dart';
 import 'package:spin_flow/widget/tela_dashboard_aluno.dart';
 import 'package:spin_flow/widget/tela_dashboard_professora.dart';
@@ -55,6 +59,8 @@ class SpinFlowApp extends StatelessWidget {
         Rotas.cadastroAluno: (context) => const FormAluno(),
         Rotas.cadastroGrupoAlunos: (context) => const FormGrupoAlunos(),
         Rotas.cadastroVideoAula: (context) => const FormVideoAula(),
+        Rotas.cadastroEstado: (context) => const FormEstadoPage(),
+        Rotas.cadastroCidade: (context) => const FormCidadePage(),
 
         // Rotas das listas
         Rotas.listaFabricantes: (context) => const ListaFabricantes(),
@@ -67,8 +73,10 @@ class SpinFlowApp extends StatelessWidget {
         Rotas.listaBikes: (context) => const ListaBikes(),
         Rotas.listaMixes: (context) => const ListaMixes(),
         Rotas.listaGruposAlunos: (context) => const ListaGruposAlunos(),
-        '/lista-video-aula': (context) => const ListaVideoAula(),
+        Rotas.listaVideoAula: (context) => const ListaVideoAula(),
         Rotas.listaSalas: (context) => const ListaSalas(),
+        Rotas.listaEstado: (context) => const ListaEstados(),
+        Rotas.listaCidade: (context) => const ListaCidades(),
       },
     );
   }

@@ -6,10 +6,12 @@ class TelaDashboardProfessora extends StatefulWidget {
   const TelaDashboardProfessora({super.key});
 
   @override
-  State<TelaDashboardProfessora> createState() => _TelaDashboardProfessoraState();
+  State<TelaDashboardProfessora> createState() =>
+      _TelaDashboardProfessoraState();
 }
 
-class _TelaDashboardProfessoraState extends State<TelaDashboardProfessora> with SingleTickerProviderStateMixin {
+class _TelaDashboardProfessoraState extends State<TelaDashboardProfessora>
+    with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
   final List<Tab> _abas = const [
@@ -67,9 +69,21 @@ class _TelaDashboardProfessoraState extends State<TelaDashboardProfessora> with 
       children: const [
         _InfoCard(titulo: 'Recados', valor: '3', icone: Icons.message),
         _InfoCard(titulo: 'Alunos Ativos', valor: '82', icone: Icons.person),
-        _InfoCard(titulo: 'Aulas Agendadas', valor: '12', icone: Icons.schedule),
-        _InfoCard(titulo: 'Mix de Músicas', valor: '4', icone: Icons.music_note),
-        _InfoCard(titulo: 'Bikes OK', valor: '18', icone: Icons.directions_bike),
+        _InfoCard(
+          titulo: 'Aulas Agendadas',
+          valor: '12',
+          icone: Icons.schedule,
+        ),
+        _InfoCard(
+          titulo: 'Mix de Músicas',
+          valor: '4',
+          icone: Icons.music_note,
+        ),
+        _InfoCard(
+          titulo: 'Bikes OK',
+          valor: '18',
+          icone: Icons.directions_bike,
+        ),
       ],
     );
   }
@@ -129,6 +143,12 @@ class _TelaDashboardProfessoraState extends State<TelaDashboardProfessora> with 
         _CadastroTile('Grupos de Alunos', Icons.groups, () {
           Navigator.pushNamed(context, Rotas.cadastroGrupoAlunos);
         }),
+        _CadastroTile('Cidade', Icons.location_city, () {
+          Navigator.pushNamed(context, Rotas.cadastroCidade);
+        }),
+        _CadastroTile('Estado', Icons.crib_outlined, () {
+          Navigator.pushNamed(context, Rotas.cadastroEstado);
+        }),
       ],
     );
   }
@@ -187,6 +207,12 @@ class _TelaDashboardProfessoraState extends State<TelaDashboardProfessora> with 
         }),
         _CadastroTile('Grupos de Alunos', Icons.groups, () {
           Navigator.pushNamed(context, Rotas.listaGruposAlunos);
+        }),
+        _CadastroTile('Estado', Icons.location_city, () {
+          Navigator.pushNamed(context, Rotas.listaEstado);
+        }),
+        _CadastroTile('Cidade', Icons.crib_outlined, () {
+          Navigator.pushNamed(context, Rotas.listaCidade);
         }),
       ],
     );
